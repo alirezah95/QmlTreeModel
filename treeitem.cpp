@@ -1,7 +1,7 @@
 #include "treeitem.h"
 
-TreeItem::TreeItem(const QVector<QVariant>& data, TreeItem* parentItem)
-    : QObject(parentItem), mItemData(data), mParentItem(parentItem)
+TreeItem::TreeItem(TreeItem* parentItem)
+    : QObject(parentItem), mParentItem(parentItem)
 {
 }
 
@@ -11,7 +11,7 @@ TreeItem::~TreeItem()
     return;
 }
 
-void TreeItem::appendChild(TreeItem* item)
+void TreeItem::appendChildItem(TreeItem* item)
 {
     mChildItems.append(item);
     return;
@@ -26,6 +26,20 @@ TreeItem* TreeItem::child(int row)
     return mChildItems.at(row);
 }
 
+QQmlListProperty<TreeItem> TreeItem::items()
+{
+    return {
+        this,
+        this,
+        &TreeItem::appendTreeItem,
+        &TreeItem::countTreeItems,
+        &TreeItem::treeItem,
+        &TreeItem::clearTreeItems,
+        &TreeItem::replaceTreeItem,
+        &TreeItem::removeLastTreeItem,
+    };
+}
+
 int TreeItem::childCount() const
 {
     return mChildItems.count();
@@ -33,16 +47,7 @@ int TreeItem::childCount() const
 
 int TreeItem::columnCount() const
 {
-    return mItemData.count();
-}
-
-QVariant TreeItem::data(int column) const
-{
-    if (column < 0 || column >= mItemData.size()) {
-        return QVariant();
-    }
-
-    return mItemData.at(column);
+    return 1;
 }
 
 TreeItem* TreeItem::parentItem()
@@ -57,4 +62,64 @@ int TreeItem::row() const
     }
 
     return 0;
+}
+
+void TreeItem::removeChildItem(qsizetype index)
+{
+    if (index < 0 || index >= mChildItems.count()) {
+        return;
+    }
+
+    mChildItems.remove(index);
+    return;
+}
+
+void TreeItem::replaceChildItem(qsizetype index, TreeItem* newItem)
+{
+    if (index < 0 || index >= mChildItems.count()) {
+        return;
+    }
+
+    mChildItems.replace(index, newItem);
+    return;
+}
+
+void TreeItem::clear()
+{
+    return mChildItems.clear();
+}
+
+void TreeItem::appendTreeItem(QQmlListProperty<TreeItem>* list, TreeItem* item)
+{
+    reinterpret_cast<TreeItem*>(list->data)->appendChildItem(item);
+    return;
+}
+
+qsizetype TreeItem::countTreeItems(QQmlListProperty<TreeItem>* list)
+{
+    return reinterpret_cast<TreeItem*>(list->data)->childCount();
+}
+
+TreeItem* TreeItem::treeItem(QQmlListProperty<TreeItem>* list, qsizetype index)
+{
+    return reinterpret_cast<TreeItem*>(list->data)->child(index);
+}
+
+void TreeItem::clearTreeItems(QQmlListProperty<TreeItem>* list)
+{
+    reinterpret_cast<TreeItem*>(list->data)->clear();
+}
+
+void TreeItem::replaceTreeItem(
+    QQmlListProperty<TreeItem>* list, qsizetype index, TreeItem* item)
+{
+    reinterpret_cast<TreeItem*>(list->data)->replaceChildItem(index, item);
+    return;
+}
+
+void TreeItem::removeLastTreeItem(QQmlListProperty<TreeItem>* list)
+{
+    auto item = reinterpret_cast<TreeItem*>(list->data);
+    item->removeChildItem(item->childCount() - 1);
+    return;
 }

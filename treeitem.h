@@ -2,32 +2,48 @@
 #define TREEITEM_H
 
 #include <QObject>
+#include <QQmlListProperty>
 #include <QVariant>
 #include <QVector>
 
 class TreeItem : public QObject
 {
+    Q_PROPERTY(QQmlListProperty<TreeElement> items READ childItems NOTIFY
+            childItemsChanged)
+    Q_CLASSINFO("DefaultProperty", "items")
+
 public:
-    explicit TreeItem(
-        const QVector<QVariant>& data, TreeItem* parentItem = nullptr);
+    explicit TreeItem(TreeItem* parentItem = nullptr);
     ~TreeItem();
 
-    void appendChild(TreeItem* child);
+    void appendChildItem(TreeItem* child);
 
     TreeItem* parentItem();
     TreeItem* child(int row);
+    QQmlListProperty<TreeItem> items();
 
     int childCount() const;
     int columnCount() const;
     int row() const;
 
-    QVariant data(int column) const;
+    void removeChildItem(qsizetype index);
+    void replaceChildItem(qsizetype index, TreeItem* newItem);
+    void clear();
+
+private:
+    static void appendTreeItem(
+        QQmlListProperty<TreeItem>* list, TreeItem* item);
+    static qsizetype countTreeItems(QQmlListProperty<TreeItem>* list);
+    static TreeItem* treeItem(
+        QQmlListProperty<TreeItem>* list, qsizetype index);
+    static void clearTreeItems(QQmlListProperty<TreeItem>* list);
+    static void replaceTreeItem(
+        QQmlListProperty<TreeItem>* list, qsizetype index, TreeItem* item);
+    static void removeLastTreeItem(QQmlListProperty<TreeItem>* list);
 
 private:
     TreeItem* mParentItem;
     QVector<TreeItem*> mChildItems;
-
-    QVector<QVariant> mItemData;
 };
 
 #endif // TREEITEM_H
