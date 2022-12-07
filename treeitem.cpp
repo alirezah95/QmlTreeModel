@@ -10,6 +10,9 @@ TreeItem::~TreeItem()
 
 void TreeItem::appendChildItem(TreeItem* item)
 {
+    item->mParentItem = this;
+    item->setParent(this);
+
     mChildItems.append(item);
     return;
 }
@@ -19,6 +22,9 @@ bool TreeItem::insertChildItem(qsizetype index, TreeItem* child)
     if (index < 0 || index > mChildItems.size()) {
         return false;
     }
+
+    child->mParentItem = this;
+    child->setParent(this);
 
     mChildItems.insert(index, child);
     return true;
