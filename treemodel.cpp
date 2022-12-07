@@ -52,6 +52,18 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
     return res;
 }
 
+QQmlListProperty<TreeItem> TreeModel::items()
+{
+    return {
+        this,
+        this,
+        &TreeModel::appendItem,
+        &TreeModel::countItems,
+        &TreeModel::item,
+        &TreeModel::clearItems,
+    };
+}
+
 QVariant TreeModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
@@ -209,3 +221,11 @@ TreeItem* TreeModel::elementFromIndex(const QModelIndex& index) const
     }
     return mRootItem;
 }
+
+void TreeModel::appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item) { }
+
+qsizetype TreeModel::countItems(QQmlListProperty<TreeItem>* prop) { }
+
+TreeItem* TreeModel::item(QQmlListProperty<TreeItem>* prop, qsizetype index) { }
+
+void TreeModel::clearItems(QQmlListProperty<TreeItem>* prop) { }

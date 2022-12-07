@@ -1,7 +1,9 @@
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
+
 #include <QAbstractItemModel>
 #include <QModelIndex>
+#include <QQmlListProperty>
 #include <QVariant>
 
 class TreeItem;
@@ -9,6 +11,9 @@ class TreeItem;
 class TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
+    Q_PROPERTY(QQmlListProperty<TreeItem> items READ items)
+    Q_CLASSINFO("DefaultProperty", "items")
+
 public:
     explicit TreeModel(QObject* parent = nullptr);
     ~TreeModel();
@@ -27,10 +32,18 @@ public:
     Q_INVOKABLE bool insert(TreeItem* item,
         const QModelIndex& parent = QModelIndex(), int pos = -1);
 
+    QQmlListProperty<TreeItem> items();
+
 private:
     void setupModelData(const QStringList& lines, TreeItem* parent);
 
     Q_INVOKABLE TreeItem* elementFromIndex(const QModelIndex& index) const;
+
+private:
+    static void appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item);
+    static qsizetype countItems(QQmlListProperty<TreeItem>* prop);
+    static TreeItem* item(QQmlListProperty<TreeItem>* prop, qsizetype index);
+    static void clearItems(QQmlListProperty<TreeItem>* prop);
 
 private:
     TreeItem* mRootItem = nullptr;
