@@ -37,6 +37,7 @@ public:
     void setData(const QJsonObject& newData);
 
 signals:
+    void dataChanged(QPrivateSignal);
     void childItemAppendedPrivately(TreeItem* child, QPrivateSignal);
 
 private:

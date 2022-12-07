@@ -105,6 +105,7 @@ void TreeItem::setData(const QJsonObject& newData)
     if (mData == newData)
         return;
     mData = newData;
+    emit dataChanged(QPrivateSignal());
 }
 
 void TreeItem::appendChildItemPrivate(TreeItem* item)
