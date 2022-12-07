@@ -34,10 +34,10 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
     }
 
     beginInsertRows(parent, pos, pos);
-    parentElement->appendChildItem(item);
+    bool res = parentElement->insertChildItem(pos, item);
     endInsertRows();
 
-    return true;
+    return res;
 }
 
 QVariant TreeModel::data(const QModelIndex& index, int role) const
