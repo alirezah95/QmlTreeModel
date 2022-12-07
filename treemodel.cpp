@@ -69,23 +69,24 @@ QVariant TreeModel::data(const QModelIndex& index, int role) const
     return item->data().value(roleName);
 }
 
-Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
+bool TreeModel::setData(
+    const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid()) {
-        return Qt::NoItemFlags;
+        return false;
     }
 
-    return QAbstractItemModel::flags(index);
-}
-
-QVariant TreeModel::headerData(
-    int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        return ""; // mRootItem->data(section);
+    if (!mRoleNames.contains(role)) {
+        return false;
     }
 
-    return QVariant();
+    TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
+
+    QString roleName = mRoleNames.value(role);
+    item->data()[roleName] = value.toJsonValue();
+
+    emit dataChanged(index, index, { role });
+    return true;
 }
 
 QModelIndex TreeModel::index(
