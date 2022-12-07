@@ -29,7 +29,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    Q_INVOKABLE bool insert(TreeItem* item,
+    Q_INVOKABLE QModelIndex insert(QJsonObject data,
         const QModelIndex& parent = QModelIndex(), int pos = -1);
 
     QQmlListProperty<TreeItem> items();

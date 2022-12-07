@@ -23,12 +23,13 @@ int TreeModel::columnCount(const QModelIndex& parent) const
     return mRootItem->columnCount();
 }
 
-bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
+QModelIndex TreeModel::insert(
+    QJsonObject data, const QModelIndex& parent, int pos)
 {
-    auto* parentElement = elementFromIndex(parent);
+    TreeItem* parentElement = elementFromIndex(parent);
 
     if (pos >= parentElement->childCount()) {
-        return false;
+        return QModelIndex();
     }
 
     if (pos < 0) {
@@ -36,8 +37,11 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
     }
 
     beginInsertRows(parent, pos, pos);
-    bool res = parentElement->insertChildItem(pos, item);
 
+    TreeItem* item = new TreeItem();
+    item->setData(data);
+
+    bool res = parentElement->insertChildItem(pos, item);
     // Add keys in TreeItem's data to role names
     updateRoleNamesWithTreeItemKeys(item);
 
@@ -49,7 +53,7 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
 
     endInsertRows();
 
-    return res;
+    return createIndex(pos, 1, item);
 }
 
 QQmlListProperty<TreeItem> TreeModel::items()
