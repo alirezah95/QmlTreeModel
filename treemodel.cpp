@@ -248,7 +248,52 @@ void TreeModel::updateRoleNamesWithTreeItemKeys(TreeItem* item)
     const auto& roles = mRoleNames.values();
     for (auto it = itemData.constBegin(); it != itemData.constEnd(); it++) {
         if (!roles.contains(it.key())) {
+            qDebug() << "Adding key: " << it.key();
             mRoleNames[mLastRoleValue++] = it.key().toUtf8();
+        }
+    }
+}
+
+void TreeModel::appendTreeItemToRoot(TreeItem* item)
+{
+    int pos = mRootItem->childCount();
+    beginInsertRows(QModelIndex(), pos, pos);
+
+    mRootItem->insertChildItem(pos, item);
+
+    // Add keys in TreeItem's data to role names
+    updateRoleNamesWithTreeItemKeys(item);
+
+    // Connect to dataChanged() and childItemAppendedPrivately() signals
+    connect(
+        item, &TreeItem::dataChanged, this, &TreeModel::onTreeItemDataChanged);
+    connect(item, &TreeItem::childItemAppendedPrivately, this,
+        &TreeModel::onTreeItemChildItemAppendedPrivately);
+
+    if (item->childCount() > 0) {
+        // All of TreeItems in 'items' property of this TreeItem should be
+        // traversed to add their keys to roleNames
+        traverseTreeItemForNewItems(item);
+    }
+
+    endInsertRows();
+}
+
+void TreeModel::traverseTreeItemForNewItems(TreeItem* item)
+{
+    for (int i = 0; i < item->childCount(); ++i) {
+        TreeItem* currentItem = item->child(i);
+        // Add keys in TreeItem's data to role names
+        updateRoleNamesWithTreeItemKeys(currentItem);
+
+        // Connect to dataChanged() and childItemAppendedPrivately() signals
+        connect(currentItem, &TreeItem::dataChanged, this,
+            &TreeModel::onTreeItemDataChanged);
+        connect(currentItem, &TreeItem::childItemAppendedPrivately, this,
+            &TreeModel::onTreeItemChildItemAppendedPrivately);
+
+        if (currentItem->childCount() > 0) {
+            traverseTreeItemForNewItems(currentItem);
         }
     }
 }
@@ -261,7 +306,10 @@ TreeItem* TreeModel::elementFromIndex(const QModelIndex& index) const
     return mRootItem;
 }
 
-void TreeModel::appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item) { }
+void TreeModel::appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item)
+{
+    reinterpret_cast<TreeModel*>(prop->object)->appendTreeItemToRoot(item);
+}
 
 qsizetype TreeModel::countItems(QQmlListProperty<TreeItem>* prop) { }
 

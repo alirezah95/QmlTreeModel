@@ -43,7 +43,10 @@ private:
 
     void updateRoleNamesWithTreeItemKeys(TreeItem* item);
 
-    Q_INVOKABLE TreeItem* elementFromIndex(const QModelIndex& index) const;
+    void appendTreeItemToRoot(TreeItem* item);
+    void traverseTreeItemForNewItems(TreeItem* item);
+
+    TreeItem* elementFromIndex(const QModelIndex& index) const;
 
 private:
     static void appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item);
