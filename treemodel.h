@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include <QModelIndex>
+#include <QQmlEngine>
 #include <QQmlListProperty>
 #include <QVariant>
 
@@ -11,6 +12,7 @@ class TreeItem;
 class TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(QQmlListProperty<TreeItem> items READ items)
     Q_CLASSINFO("DefaultProperty", "items")
 

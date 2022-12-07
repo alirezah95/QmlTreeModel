@@ -3,6 +3,7 @@
 
 #include <QJsonObject>
 #include <QObject>
+#include <QQmlEngine>
 #include <QQmlListProperty>
 #include <QVariant>
 #include <QVector>
@@ -10,6 +11,7 @@
 class TreeItem : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(QJsonObject data READ data WRITE setData REQUIRED)
     Q_PROPERTY(QQmlListProperty<TreeItem> items READ items CONSTANT)
     Q_CLASSINFO("DefaultProperty", "items")
