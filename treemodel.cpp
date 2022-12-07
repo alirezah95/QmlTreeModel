@@ -1,6 +1,8 @@
 #include "treemodel.h"
 #include "treeitem.h"
 
+#include <QMetaProperty>
+
 TreeModel::TreeModel(QObject* parent) : QAbstractItemModel(parent)
 {
     mRootItem = new TreeItem({});
@@ -35,6 +37,16 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
 
     beginInsertRows(parent, pos, pos);
     bool res = parentElement->insertChildItem(pos, item);
+
+    // Add keys in TreeItem's data to role names
+    auto& itemData = item->data();
+    const auto& roles = mRoleNames.values();
+    for (auto it = itemData.constBegin(); it != itemData.constEnd(); it++) {
+        if (!roles.contains(it.key())) {
+            mRoleNames[mLastRoleValue++] = it.key().toUtf8();
+        }
+    }
+
     endInsertRows();
 
     return res;
@@ -42,6 +54,8 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
 
 QVariant TreeModel::data(const QModelIndex& index, int role) const
 {
+    qDebug() << "data is called";
+
     if (!index.isValid()) {
         return QVariant();
     }
@@ -95,6 +109,11 @@ QModelIndex TreeModel::index(
     }
 
     return QModelIndex();
+}
+
+QHash<int, QByteArray> TreeModel::roleNames() const
+{
+    return mRoleNames;
 }
 
 QModelIndex TreeModel::parent(const QModelIndex& index) const

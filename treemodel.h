@@ -20,6 +20,7 @@ public:
         int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column,
         const QModelIndex& parent = QModelIndex()) const override;
+    QHash<int, QByteArray> roleNames() const override;
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -34,6 +35,10 @@ private:
 
 private:
     TreeItem* mRootItem = nullptr;
+
+    int mLastRoleValue = Qt::UserRole;
+
+    QHash<int, QByteArray> mRoleNames;
 };
 
 #endif // TREEMODEL_H
