@@ -43,9 +43,11 @@ QQmlListProperty<TreeItem> TreeItem::items()
 {
     return {
         this,
-        this,
+        &mData,
+        &TreeItem::appendChildItem,
         &TreeItem::countTreeItems,
         &TreeItem::treeItem,
+        &TreeItem::clearChildItems,
     };
 }
 
@@ -105,12 +107,28 @@ void TreeItem::setData(const QJsonObject& newData)
     mData = newData;
 }
 
+void TreeItem::appendChildItemPrivate(TreeItem* item)
+{
+    appendChildItem(item);
+    emit childItemAppendedPrivately(item, QPrivateSignal());
+
+    return;
+}
+
+void TreeItem::appendChildItem(QQmlListProperty<TreeItem>* list, TreeItem* item)
+{
+    reinterpret_cast<TreeItem*>(list->object)->appendChildItemPrivate(item);
+    return;
+}
+
 qsizetype TreeItem::countTreeItems(QQmlListProperty<TreeItem>* list)
 {
-    return reinterpret_cast<TreeItem*>(list->data)->childCount();
+    return reinterpret_cast<TreeItem*>(list->object)->childCount();
 }
 
 TreeItem* TreeItem::treeItem(QQmlListProperty<TreeItem>* list, qsizetype index)
 {
-    return reinterpret_cast<TreeItem*>(list->data)->child(index);
+    return reinterpret_cast<TreeItem*>(list->object)->child(index);
 }
+
+void TreeItem::clearChildItems(QQmlListProperty<TreeItem>* list) { }

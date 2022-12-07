@@ -10,7 +10,7 @@
 class TreeItem : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QJsonObject data READ data WRITE setData)
+    Q_PROPERTY(QJsonObject data READ data WRITE setData REQUIRED)
     Q_PROPERTY(QQmlListProperty<TreeItem> items READ items CONSTANT)
     Q_CLASSINFO("DefaultProperty", "items")
 
@@ -36,10 +36,18 @@ public:
     QJsonObject& data() { return mData; }
     void setData(const QJsonObject& newData);
 
+signals:
+    void childItemAppendedPrivately(TreeItem* child, QPrivateSignal);
+
 private:
+    void appendChildItemPrivate(TreeItem* item);
+
+    static void appendChildItem(
+        QQmlListProperty<TreeItem>* list, TreeItem* item);
     static qsizetype countTreeItems(QQmlListProperty<TreeItem>* list);
     static TreeItem* treeItem(
         QQmlListProperty<TreeItem>* list, qsizetype index);
+    static void clearChildItems(QQmlListProperty<TreeItem>* list);
 
 private:
     TreeItem* mParentItem;
