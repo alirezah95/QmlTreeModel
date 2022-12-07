@@ -39,13 +39,13 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
     bool res = parentElement->insertChildItem(pos, item);
 
     // Add keys in TreeItem's data to role names
-    auto& itemData = item->data();
-    const auto& roles = mRoleNames.values();
-    for (auto it = itemData.constBegin(); it != itemData.constEnd(); it++) {
-        if (!roles.contains(it.key())) {
-            mRoleNames[mLastRoleValue++] = it.key().toUtf8();
-        }
-    }
+    updateRoleNamesWithTreeItemKeys(item);
+
+    // Connect to dataChanged() and childItemAppendedPrivately() signals
+    connect(
+        item, &TreeItem::dataChanged, this, &TreeModel::onTreeItemDataChanged);
+    connect(item, &TreeItem::childItemAppendedPrivately, this,
+        &TreeModel::onTreeItemChildItemAppendedPrivately);
 
     endInsertRows();
 
@@ -62,6 +62,33 @@ QQmlListProperty<TreeItem> TreeModel::items()
         &TreeModel::item,
         &TreeModel::clearItems,
     };
+}
+
+void TreeModel::onTreeItemDataChanged()
+{
+    if (auto item = qobject_cast<TreeItem*>(QObject::sender())) {
+        updateRoleNamesWithTreeItemKeys(item);
+    }
+}
+
+void TreeModel::onTreeItemChildItemAppendedPrivately(TreeItem* child)
+{
+    if (TreeItem* parentItem = child->parentItem()) {
+        int parentRow = parentItem->row();
+        QModelIndex parentIndex = createIndex(parentRow, 1, parentItem);
+
+        int childRow = child->row();
+        beginInsertRows(parentIndex, childRow, childRow);
+
+        updateRoleNamesWithTreeItemKeys(child);
+        // Connect to dataChanged() and childItemAppendedPrivately() signals
+        connect(child, &TreeItem::dataChanged, this,
+            &TreeModel::onTreeItemDataChanged);
+        connect(child, &TreeItem::childItemAppendedPrivately, this,
+            &TreeModel::onTreeItemChildItemAppendedPrivately);
+
+        endInsertRows();
+    }
 }
 
 QVariant TreeModel::data(const QModelIndex& index, int role) const
@@ -212,6 +239,18 @@ void TreeModel::setupModelData(const QStringList& lines, TreeItem* parent)
         number++;
     }
     */
+}
+
+void TreeModel::updateRoleNamesWithTreeItemKeys(TreeItem* item)
+{
+    // Add keys in TreeItem's data to role names
+    auto& itemData = item->data();
+    const auto& roles = mRoleNames.values();
+    for (auto it = itemData.constBegin(); it != itemData.constEnd(); it++) {
+        if (!roles.contains(it.key())) {
+            mRoleNames[mLastRoleValue++] = it.key().toUtf8();
+        }
+    }
 }
 
 TreeItem* TreeModel::elementFromIndex(const QModelIndex& index) const

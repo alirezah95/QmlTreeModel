@@ -34,8 +34,14 @@ public:
 
     QQmlListProperty<TreeItem> items();
 
+private slots:
+    void onTreeItemDataChanged();
+    void onTreeItemChildItemAppendedPrivately(TreeItem* child);
+
 private:
     void setupModelData(const QStringList& lines, TreeItem* parent);
+
+    void updateRoleNamesWithTreeItemKeys(TreeItem* item);
 
     Q_INVOKABLE TreeItem* elementFromIndex(const QModelIndex& index) const;
 
