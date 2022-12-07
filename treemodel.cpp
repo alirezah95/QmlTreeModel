@@ -54,19 +54,19 @@ bool TreeModel::insert(TreeItem* item, const QModelIndex& parent, int pos)
 
 QVariant TreeModel::data(const QModelIndex& index, int role) const
 {
-    qDebug() << "data is called";
-
     if (!index.isValid()) {
         return QVariant();
     }
 
-    if (role != Qt::DisplayRole) {
+    if (!mRoleNames.contains(role)) {
         return QVariant();
     }
 
     TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
 
-    return ""; // item->data(index.column());
+    QString roleName = mRoleNames.value(role);
+
+    return item->data().value(roleName);
 }
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
