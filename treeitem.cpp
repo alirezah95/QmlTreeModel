@@ -14,6 +14,16 @@ void TreeItem::appendChildItem(TreeItem* item)
     return;
 }
 
+bool TreeItem::insertChildItem(qsizetype index, TreeItem* child)
+{
+    if (index < 0 || index > mChildItems.size()) {
+        return false;
+    }
+
+    mChildItems.insert(index, child);
+    return true;
+}
+
 TreeItem* TreeItem::child(int row)
 {
     if (row < 0 || row >= mChildItems.size()) {

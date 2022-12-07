@@ -17,6 +17,7 @@ public:
     ~TreeItem();
 
     void appendChildItem(TreeItem* child);
+    bool insertChildItem(qsizetype index, TreeItem* child);
 
     TreeItem* parentItem();
     TreeItem* child(int row);
