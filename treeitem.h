@@ -8,12 +8,12 @@
 
 class TreeItem : public QObject
 {
-    Q_PROPERTY(QQmlListProperty<TreeElement> items READ childItems NOTIFY
-            childItemsChanged)
+    Q_OBJECT
+    Q_PROPERTY(QQmlListProperty<TreeItem> items READ items NOTIFY itemsChanged)
     Q_CLASSINFO("DefaultProperty", "items")
 
 public:
-    explicit TreeItem(TreeItem* parentItem = nullptr);
+    explicit TreeItem(QObject* parent = nullptr);
     ~TreeItem();
 
     void appendChildItem(TreeItem* child);
@@ -29,6 +29,9 @@ public:
     void removeChildItem(qsizetype index);
     void replaceChildItem(qsizetype index, TreeItem* newItem);
     void clear();
+
+signals:
+    void itemsChanged();
 
 private:
     static void appendTreeItem(

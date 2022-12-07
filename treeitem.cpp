@@ -1,9 +1,6 @@
 #include "treeitem.h"
 
-TreeItem::TreeItem(TreeItem* parentItem)
-    : QObject(parentItem), mParentItem(parentItem)
-{
-}
+TreeItem::TreeItem(QObject* parent) : QObject(parent), mParentItem(nullptr) { }
 
 TreeItem::~TreeItem()
 {
