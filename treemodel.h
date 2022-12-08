@@ -33,6 +33,7 @@ public:
 
     Q_INVOKABLE QModelIndex insert(QJsonObject data,
         const QModelIndex& parent = QModelIndex(), int pos = -1);
+    Q_INVOKABLE TreeItem* itemFromIndex(const QModelIndex& index) const;
 
     QQmlListProperty<TreeItem> items();
 
@@ -47,8 +48,6 @@ private:
 
     void appendTreeItemToRoot(TreeItem* item);
     void traverseTreeItemForNewItems(TreeItem* item);
-
-    TreeItem* elementFromIndex(const QModelIndex& index) const;
 
 private:
     static void appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item);

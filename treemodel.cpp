@@ -26,7 +26,7 @@ int TreeModel::columnCount(const QModelIndex& parent) const
 QModelIndex TreeModel::insert(
     QJsonObject data, const QModelIndex& parent, int pos)
 {
-    TreeItem* parentElement = elementFromIndex(parent);
+    TreeItem* parentElement = itemFromIndex(parent);
 
     if (pos >= parentElement->childCount()) {
         return QModelIndex();
@@ -302,7 +302,7 @@ void TreeModel::traverseTreeItemForNewItems(TreeItem* item)
     }
 }
 
-TreeItem* TreeModel::elementFromIndex(const QModelIndex& index) const
+TreeItem* TreeModel::itemFromIndex(const QModelIndex& index) const
 {
     if (index.isValid()) {
         return static_cast<TreeItem*>(index.internalPointer());
