@@ -34,6 +34,7 @@ public:
     Q_INVOKABLE QModelIndex insert(QJsonObject data,
         const QModelIndex& parent = QModelIndex(), int pos = -1);
     Q_INVOKABLE TreeItem* itemFromIndex(const QModelIndex& index) const;
+    Q_INVOKABLE void clear();
 
     QQmlListProperty<TreeItem> items();
 

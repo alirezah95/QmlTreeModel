@@ -252,7 +252,6 @@ void TreeModel::updateRoleNamesWithTreeItemKeys(TreeItem* item)
     const auto& roles = mRoleNames.values();
     for (auto it = itemData.constBegin(); it != itemData.constEnd(); it++) {
         if (!roles.contains(it.key())) {
-            qDebug() << "Adding key: " << it.key();
             mRoleNames[mLastRoleValue++] = it.key().toUtf8();
         }
     }
@@ -308,6 +307,15 @@ TreeItem* TreeModel::itemFromIndex(const QModelIndex& index) const
         return static_cast<TreeItem*>(index.internalPointer());
     }
     return mRootItem;
+}
+
+void TreeModel::clear()
+{
+    beginResetModel();
+    mRootItem->clear();
+    mRoleNames.clear();
+    mLastRoleValue = Qt::UserRole;
+    endResetModel();
 }
 
 void TreeModel::appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item)
