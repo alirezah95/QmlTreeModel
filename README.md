@@ -8,4 +8,5 @@ Qml TreeModel
     ```cmake
     add_subdirectory("treemodel")
     ```
+    > **WARNINIG**: `add_subdirectory()` have to be placed after `add_executable()` 
 - Import `treemodel 1.0` module into QML and start using it
