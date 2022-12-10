@@ -323,8 +323,17 @@ void TreeModel::appendItem(QQmlListProperty<TreeItem>* prop, TreeItem* item)
     reinterpret_cast<TreeModel*>(prop->object)->appendTreeItemToRoot(item);
 }
 
-qsizetype TreeModel::countItems(QQmlListProperty<TreeItem>* prop) { }
+qsizetype TreeModel::countItems(QQmlListProperty<TreeItem>* prop)
+{
+    return reinterpret_cast<TreeModel*>(prop->object)->rowCount();
+}
 
-TreeItem* TreeModel::item(QQmlListProperty<TreeItem>* prop, qsizetype index) { }
+TreeItem* TreeModel::item(QQmlListProperty<TreeItem>* prop, qsizetype index)
+{
+    return nullptr;
+}
 
-void TreeModel::clearItems(QQmlListProperty<TreeItem>* prop) { }
+void TreeModel::clearItems(QQmlListProperty<TreeItem>* prop)
+{
+    reinterpret_cast<TreeModel*>(prop->object)->clear();
+}
