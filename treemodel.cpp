@@ -79,7 +79,7 @@ void TreeModel::onTreeItemChildItemAppendedPrivately(TreeItem* child)
 {
     if (TreeItem* parentItem = child->parentItem()) {
         int parentRow = parentItem->row();
-        QModelIndex parentIndex = createIndex(parentRow, 1, parentItem);
+        QModelIndex parentIndex = createIndex(parentRow, 0, parentItem);
 
         int childRow = child->row();
         beginInsertRows(parentIndex, childRow, childRow);
