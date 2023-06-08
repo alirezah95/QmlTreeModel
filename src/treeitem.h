@@ -10,6 +10,8 @@
 
 #include "treemodel_global.hpp"
 
+namespace qtr {
+
 class TM_EXPORT TreeItem : public QObject
 {
     Q_OBJECT
@@ -59,5 +61,7 @@ private:
     QVector<TreeItem*> mChildItems;
     QJsonObject mData;
 };
+
+}
 
 #endif // TREEITEM_H

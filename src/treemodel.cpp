@@ -3,6 +3,8 @@
 
 #include <QMetaProperty>
 
+namespace qtr {
+
 TreeModel::TreeModel(QObject* parent) : QAbstractItemModel(parent)
 {
     mRootItem = new TreeItem({});
@@ -336,4 +338,6 @@ TreeItem* TreeModel::item(QQmlListProperty<TreeItem>* prop, qsizetype index)
 void TreeModel::clearItems(QQmlListProperty<TreeItem>* prop)
 {
     reinterpret_cast<TreeModel*>(prop->object)->clear();
+}
+
 }

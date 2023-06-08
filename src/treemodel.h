@@ -9,6 +9,8 @@
 
 #include "treemodel_global.hpp"
 
+namespace qtr {
+
 class TreeItem;
 
 class TM_EXPORT TreeModel : public QAbstractItemModel
@@ -65,5 +67,6 @@ private:
 
     QHash<int, QByteArray> mRoleNames;
 };
+}
 
 #endif // TREEMODEL_H

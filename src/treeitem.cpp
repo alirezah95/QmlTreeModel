@@ -1,5 +1,7 @@
 #include "treeitem.h"
 
+namespace qtr {
+
 TreeItem::TreeItem(QObject* parent) : QObject(parent), mParentItem(nullptr) { }
 
 TreeItem::~TreeItem()
@@ -133,3 +135,5 @@ TreeItem* TreeItem::treeItem(QQmlListProperty<TreeItem>* list, qsizetype index)
 }
 
 void TreeItem::clearChildItems(QQmlListProperty<TreeItem>* list) { }
+
+}
