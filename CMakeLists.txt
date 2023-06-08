@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(PROJECT_NAME "QmlTreeModel")
 set(PROJECT_VERSION_MAJOR 1)
@@ -24,6 +25,7 @@ set(PROJECT_LANGUAGES "CXX")
 set(PROJECT_DESCRIPTION "A simple tree model for QML")
 set(PROJECT_HOMEPAGE_URL "https://github.com/alirezah95/QmlTreeModel")
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     # For Qt 6.2.x and Qt 6.3.x, major version in qt_add_qml_module() must be
