@@ -7,9 +7,11 @@
 #include <QQmlListProperty>
 #include <QVariant>
 
+#include "treemodel_global.hpp"
+
 class TreeItem;
 
-class TreeModel : public QAbstractItemModel
+class TM_EXPORT TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
     QML_ELEMENT

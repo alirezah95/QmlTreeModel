@@ -8,7 +8,9 @@
 #include <QVariant>
 #include <QVector>
 
-class TreeItem : public QObject
+#include "treemodel_global.hpp"
+
+class TM_EXPORT TreeItem : public QObject
 {
     Q_OBJECT
     QML_ELEMENT

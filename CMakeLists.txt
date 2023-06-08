@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.24)
 
 find_package(QT NAMES Qt6 Qt5)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 set(PROJECT_NAME "QmlTreeModel")
 set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 1)
@@ -28,10 +33,15 @@ if(QT_VERSION_MAJOR EQUAL 6)
         SHARED
         VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
         SOURCES
-            treemodel.cpp
-            treemodel.h
-            treeitem.cpp
-            treeitem.h
+            src/treemodel_global.hpp
+            src/treemodel.cpp
+            src/treemodel.h
+            src/treeitem.cpp
+            src/treeitem.h
+    )
+
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        TREEMODEL_LIBRARY
     )
 else()
 
